@@ -5,6 +5,7 @@ import { Map,
   LayersControl,
 } from 'react-leaflet';
 import GeoJson from '../GeoJson';
+import MarkerCluster from '../MarkerCluster';
 import 'leaflet/dist/leaflet.css'
 import './LeafletMap.css';
 
@@ -26,6 +27,7 @@ const zoomLevel = 13;
 
 const { Overlay } = LayersControl;
 
+
 class LeafletMap extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +42,7 @@ class LeafletMap extends Component {
     this.fetchLayerGroups = this.fetchLayerGroups.bind(this);
     this.fetchGroupDataset = this.fetchGroupDataset.bind(this);
   }
-
+  
   componentDidMount() {
     // const leafletMap = this.leafletMap.leafletElement;
 
@@ -95,33 +97,40 @@ class LeafletMap extends Component {
   }
 
   render() {
-    // console.log('state', this.state);
+   //console.log('state', this.state);
     const { layerGroupIds, layerGroupsById } = this.state;
 
     return (
       <Map
         className="map"
-        // ref={map => { this.leafletMap = map; }}
+        ref={map => { this.leafletMap = map; }}
         center={mapCenter}
-        zoom={zoomLevel} >
-
+        zoom={zoomLevel}
+        maxZoom={24} >
+        
         <TileLayer attribution={attribution} url={osmTiles} />
-
         <LayersControl position="topright">
           { layerGroupIds.map((layerGroup) => {
             if (!layerGroupsById[layerGroup].dataset) return null;
-
+            const isMarkerData = (layerGroupsById[layerGroup].type === "marker")
+            {console.log(layerGroup)}
             return (
               <Overlay
                 key={layerGroup}
                 name={layerGroup}
-                checked={!layerGroupsById[layerGroup].readOnly}>
-                <GeoJson layerGroup={layerGroup} data={layerGroupsById[layerGroup].dataset} />
-              </Overlay>
+                checked={!layerGroupsById[layerGroup].readOnly}> 
+                
+                { isMarkerData ?
+                  <MarkerCluster data={layerGroupsById[layerGroup].dataset} />  
+                  : 
+                  <GeoJson layerGroup={layerGroup} data={layerGroupsById[layerGroup].dataset} />        
+                }  
+               
+            </Overlay>
             )
-          }) }
+            }) 
+           }
         </LayersControl>
-
         <ScaleControl position="bottomleft" />
       </Map>
     );

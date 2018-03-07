@@ -43,12 +43,12 @@ class GeoJson extends Component {
   render() {
     return (
       <GeoJSON
-        ref={element => this.leafletElement = element }
+        ref={element => this.leafletElement = element}
         pointToLayer={this.pointToLayer}
         style={this.style}
         data={this.props.data}
-        onEachFeature={this.onEachFeature}
-      />
+        onEachFeature={this.onEachFeature}>
+      </GeoJSON>
     )
   }
 }
