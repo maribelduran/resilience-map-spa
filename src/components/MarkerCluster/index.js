@@ -34,7 +34,7 @@ class MarkerCluster extends Component{
   onMarkerClick(marker){
    // console.log(marker);
     console.log("Clicked Marker!");
-    marker.bindPopup(`<p>Hello world! My coordinates are ${marker._latlng.lat} ${marker._latlng.lng}.</p>`).openPopup();
+   // marker.bindPopup(`<p>Hello world! My coordinates are ${marker._latlng.lat} ${marker._latlng.lng}.</p>`).openPopup();
   }
 
   //react-leaflet-markerclusted method
@@ -72,8 +72,11 @@ class MarkerCluster extends Component{
   render(){  
     this.data = this.props.data;
     let markers = [];
-    if (this.data.features){
-      markers = this.data.features.map(feature => {
+    
+    const filteredFeatures = this.data.features.filter((feature) => {return (feature.geometry.coordinates[0] && feature.geometry.coordinates[1])});
+
+    if (filteredFeatures){
+      markers = filteredFeatures.map(feature => {
       let marker = {};
       marker.position = this.getLatLng(feature);
       marker.popup = this.getPopup(feature);
